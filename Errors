@@ -1,12 +1,8 @@
-Функция replace_spam_words возвращает неправильный результат:
-Guido van Rossum began working on ****** in the late 1980s, as a successor to the ABC
-programming ****** language, and first released ****** it in 1991 as ****** 0.9.0. ****** .
+Funkcja find_all_emails zwraca nieprawidłowy wynik:
+['Ima.Fool@iana.org', '1Fool@iana.org', 'first_last@iana.org', 'first.middle.last@iana.or', 'abc111@test.com'].
 
-Ожидалось, что при вызове функции replace_spam_words('
-Guido van Rossum began working on Python in the late 1980s, as a successor to the ABC
-programming PYTHOn language, and first released pYthoN it in 1991 as Python 0.9.0. pythOn ',
-['began', 'Python'])
+Oczekiwano, że funkcja find_all_emails po otrzymaniu parametru
+'Ima.Fool@iana.org Ima.Fool@iana.o 1Fool@iana.org first_last@iana.org first.middle.last@iana.or a@test.com abc111@test.com.net'
 
-будет получен следующий результат
-Guido van Rossum ***** working on ****** in the late 1980s, as a successor to the ABC
-programming ****** language, and first released ****** it in 1991 as ****** 0.9.0. ******
+zwróci następującą listę
+['Ima.Fool@iana.org', 'Fool@iana.org', 'first_last@iana.org', 'first.middle.last@iana.or', 'abc111@test.com']
