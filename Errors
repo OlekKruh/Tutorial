@@ -1,0 +1,12 @@
+Функция replace_spam_words возвращает неправильный результат:
+Guido van Rossum began working on ****** in the late 1980s, as a successor to the ABC
+programming ****** language, and first released ****** it in 1991 as ****** 0.9.0. ****** .
+
+Ожидалось, что при вызове функции replace_spam_words('
+Guido van Rossum began working on Python in the late 1980s, as a successor to the ABC
+programming PYTHOn language, and first released pYthoN it in 1991 as Python 0.9.0. pythOn ',
+['began', 'Python'])
+
+будет получен следующий результат
+Guido van Rossum ***** working on ****** in the late 1980s, as a successor to the ABC
+programming ****** language, and first released ****** it in 1991 as ****** 0.9.0. ******
