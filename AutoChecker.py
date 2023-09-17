@@ -1,13 +1,13 @@
-CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
-               "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
-
-TRANS = {}
-
-for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
-    TRANS[ord(c)] = l
-    TRANS[ord(c.upper())] = l.upper()
+import re
 
 
-def translate(name):
-    return name.translate(TRANS)
+def find_word(text, word):
+    res_dict = {}
+    pattern = re.compile(word, flags=re.IGNORECASE)
+    result = re.findall(pattern, text)
+    return result
+
+
+print(find_word(
+    "Guido van Rossum began working on Python in the late 1980s, as a successor to the ABC programming language, and first released it in 1991 as Python 0.9.0.",
+    "Python"))
