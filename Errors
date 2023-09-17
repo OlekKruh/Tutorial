@@ -1,8 +1,8 @@
-Funkcja find_all_emails zwraca nieprawidłowy wynik:
-['Ima.Fool@iana.org', '1Fool@iana.org', 'first_last@iana.org', 'first.middle.last@iana.or', 'abc111@test.com'].
+Функция find_all_emails возвращает неправильный результат:
+['Ima.Fool@iana.org', 'first_last@iana.org', 'first.middle.last@iana.or', 'abc111@test.com'].
 
-Oczekiwano, że funkcja find_all_emails po otrzymaniu parametru
+Ожидалось, что функция find_all_emails при получении параметра
 'Ima.Fool@iana.org Ima.Fool@iana.o 1Fool@iana.org first_last@iana.org first.middle.last@iana.or a@test.com abc111@test.com.net'
 
-zwróci następującą listę
+вернет следующий список
 ['Ima.Fool@iana.org', 'Fool@iana.org', 'first_last@iana.org', 'first.middle.last@iana.or', 'abc111@test.com']
