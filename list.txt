@@ -1,20 +1,4 @@
-import base64
-def encode_data_to_base64(data):
-    encoded_data = []
-    for element in data:
-        print(element)
-        output_data = base64.b64encode(element.encode('utf-8')).decode('utf-8')
-        print(output_data)
-        encoded_data.append(output_data)
-        print(encoded_data)
-    return encoded_data
-
-
-def save_credentials_users(path, users_info):
-with open(path, 'wb') as content:
-    for key, value in users_info.items():
-        data1 = key.encode('ascii')
-        data2 = value.encode('ascii')
-        line = data1 + b':' + data2
-        content.write(line + b'\n')
-        print(line)
+jpg jpeg png gif bmp tiff tif webp svg heif heic raw
+mp4 avi mkv mov wmv flv webm 3gp mpeg mpg ogg h264 h265 hevc
+doc docx pdf odt rtf txt html tex xls xlsx ppt pptx
+mp3 wav aac flac ogg wma m4a aiff ape midi mp4 amr
