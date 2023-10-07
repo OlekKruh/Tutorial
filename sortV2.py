@@ -2,11 +2,18 @@ import os
 import re
 import sys
 import shutil
+import zipfile
+import tarfile
+import rarfile
+import py7zr
 
 
-def directory_creation(path, list):
+def directory_creation(path, dirs_to_create):
     created_dirs_path_list = []
-    for name in list[1:]:
+
+    for name in dirs_to_create:
+        if os.path.basename(path) == name or name == 'folders':
+            continue
         new_directory = os.path.join(path, name)
         if not os.path.exists(new_directory):
             os.mkdir(new_directory)
@@ -15,6 +22,7 @@ def directory_creation(path, list):
             created_dirs_path_list.append(new_directory)
         else:
             print(f'Directory {name} already exists')
+
     return created_dirs_path_list
 
 
@@ -102,6 +110,53 @@ def relocate(current_directory, dict_of_lists):
                 print(f'Failed to move {file_name}: {str(j)}')
 
 
+def remove_empty_directories(directory_path):
+    for root, dirs, _ in os.walk(directory_path):
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            if not os.listdir(dir_path):
+                try:
+                    os.rmdir(dir_path)
+                    print(f'Removed empty directory: {dir_path}')
+                except OSError:
+                    print(f'Error: Could not remove directory {dir_path}')
+
+
+def enter_and_unzip(directory_path, extension):
+    for root, _, files in os.walk(directory_path):
+        for file in files:
+            file_extension = os.path.splitext(file)[-1].lower()
+            if file_extension in extension['archives']:
+                file_path = os.path.join(root, file)
+                new_folder_name, _ = os.path.splitext(file)
+                extract_path = os.path.join(root, new_folder_name)
+
+                print(f"Extracting {file} to {extract_path}")
+
+                try:
+                    if file_extension == '.zip':
+                        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                            zip_ref.extractall(extract_path)
+                    elif file_extension == '.rar':
+                        with rarfile.RarFile(file_path, 'r') as rar_ref:
+                            rar_ref.extractall(extract_path)
+                    elif file_extension == '.7z':
+                        with py7zr.SevenZipFile(file_path, mode='r') as archive:
+                            archive.extractall(extract_path)
+                    elif file_extension == '.tar':
+                        with tarfile.open(file_path, 'r') as tar_ref:
+                            tar_ref.extractall(extract_path)
+                    elif file_extension == '.gz':
+                        with tarfile.open(file_path, 'r:gz') as tar_ref:
+                            tar_ref.extractall(extract_path)
+                    else:
+                        print(f"Unsupported archive format: {file_extension}")
+                except Exception as e:
+                    print(f"Error extracting {file}: {str(e)}")
+
+                print(f"Extracted {file} to {extract_path}")
+
+
 def enter_subdirectories_and_make_magic(current_directory):
     try:
         os.chdir(current_directory)
@@ -175,5 +230,8 @@ extension = {
 #     print('Directory does not exist.')
 #     sys.exit(1)
 
-directory_path = r'C:\Users\Alex\Downloads\TestDir'
+directory_path = r'C:\Users\Alex\Downloads\1'
+
+remove_empty_directories(directory_path)
 enter_subdirectories_and_make_magic(directory_path)
+enter_and_unzip(directory_path, extension)
