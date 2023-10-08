@@ -230,7 +230,7 @@ extension = {
 #     print('Directory does not exist.')
 #     sys.exit(1)
 
-directory_path = r'C:\Users\Alex\Downloads\1'
+directory_path = r'C:\Users\YourName\Downloads\1'
 
 remove_empty_directories(directory_path)
 enter_subdirectories_and_make_magic(directory_path)
