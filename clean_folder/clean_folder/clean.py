@@ -6,6 +6,7 @@ import zipfile
 import tarfile
 import rarfile
 import py7zr
+import argparse
 
 
 def directory_creation(path, dirs_to_create):
@@ -222,16 +223,22 @@ extension = {
     'unknown': (),
 }
 
-# if len(sys.argv) != 2:
-#     print('Please pass only one argument - the path to the directory.')
-#     sys.exit(1)
-# directory_path = sys.argv[1]
-# if not os.path.exists(directory_path) or not os.path.isdir(directory_path):
-#     print('Directory does not exist.')
-#     sys.exit(1)
 
-directory_path = r'C:\Users\YourName\Downloads\1'
+def main():
+    parser = argparse.ArgumentParser(description='Clean and organize a folder.')
+    parser.add_argument('directory', type=str, help='The path to the directory to be cleaned and organized.')
 
-remove_empty_directories(directory_path)
-enter_subdirectories_and_make_magic(directory_path)
-enter_and_unzip(directory_path, extension)
+    args = parser.parse_args()
+    directory_path = args.directory
+
+    if not os.path.exists(directory_path) or not os.path.isdir(directory_path):
+        print('Directory does not exist.')
+        sys.exit(1)
+
+    remove_empty_directories(directory_path)
+    enter_subdirectories_and_make_magic(directory_path)
+    enter_and_unzip(directory_path, extension)
+
+
+if __name__ == '__main__':
+    main()
