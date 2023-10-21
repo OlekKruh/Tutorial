@@ -1,17 +1,10 @@
-from collections import deque
-
-MAX_LEN = 5
-
-fifo = deque(maxlen=MAX_LEN)
+from functools import reduce
 
 
-def push(element):
-    global fifo
-    fifo.append(element)
-    return fifo
+def amount_payment(payment):
+    return reduce(lambda x, y: x + y if y>0 else x, payment, 0)
 
 
-def pop():
-    global fifo
-    res = fifo.popleft()
-    return res
+payment = [-1, -3, 4]
+
+print(amount_payment(payment))
