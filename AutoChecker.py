@@ -1,10 +1,17 @@
-def to_indexed(source_file, output_file):
-    counter = 0
+from collections import deque
 
-    with open(source_file, 'r') as content, open(output_file, 'w') as outcontent:
-        lines = content.readlines()
+MAX_LEN = 5
 
-        for line in lines:
-            new_line = f'{counter}: {line}'
-            outcontent.write(new_line)
-            counter += 1
+fifo = deque(maxlen=MAX_LEN)
+
+
+def push(element):
+    global fifo
+    fifo.append(element)
+    return fifo
+
+
+def pop():
+    global fifo
+    res = fifo.popleft()
+    return res
