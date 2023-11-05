@@ -4,7 +4,7 @@ import re
 
 # Error decorator
 def input_error(func):
-    def wrapper(contact_list, name, phone):
+    def wrapper(contact_list, *args):
 
     return wrapper
 
@@ -18,7 +18,9 @@ def exit_program():
 
 # Adding contacts
 @input_error
-def add(contact_list, name, phone):
+def add(contact_list, *args):
+    name = args[0]
+    phone = args[1]
     contact_list[name] = phone
     print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
     return contact_list
@@ -26,7 +28,8 @@ def add(contact_list, name, phone):
 
 # Changing phone in contacts
 @input_error
-def change(contact_list, name, phone):
+def change(contact_list, *args):
+    name = args[0]
     if name in contact_list:
         contact_list[name] = phone
         print(f"Contact '{name}' updated with phone number '{phone}'.")
@@ -45,7 +48,8 @@ def show_all(contact_list):
 
 
 # Shoving contact phone number
-def phone(contact_list, name):
+def phone(contact_list, *args):
+    name = args[0]
     if name in contact_list:
         return print(f'The phone number for {name} is {contact_list[name]}.\n')
     else:
