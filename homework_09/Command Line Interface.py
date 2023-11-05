@@ -23,6 +23,7 @@ def add(contact_list, name, phone):
     print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
     return contact_list
 
+
 # Changing phone in contacts
 @input_error
 def change(contact_list, name, phone):
@@ -35,7 +36,6 @@ def change(contact_list, name, phone):
 
 
 # Shoving content of Contact list
-
 def show_all(contact_list):
     if not contact_list:
         return 'Contact list is empty.'
@@ -45,7 +45,6 @@ def show_all(contact_list):
 
 
 # Shoving contact phone number
-
 def phone(contact_list, name):
     if name in contact_list:
         return print(f'The phone number for {name} is {contact_list[name]}.\n')
@@ -84,7 +83,7 @@ def main():
         user_input = input('>>> ').lower()
         for key in COMMAND_LIST.keys():
             if user_input.startswith(key):
-                user_input = user_input.replaceall(key, '', 1)
+                user_input = user_input.replaceall(key, '')
                 COMMAND_LIST[key](contact_list, *user_input.split())
                 break
         else:
