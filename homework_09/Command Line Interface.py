@@ -83,7 +83,7 @@ def main():
         user_input = input('>>> ').lower()
         for key in COMMAND_LIST.keys():
             if user_input.startswith(key):
-                user_input = user_input.replaceall(key, '')
+                user_input = user_input.replace(key, '')
                 COMMAND_LIST[key](contact_list, *user_input.split())
                 break
         else:
