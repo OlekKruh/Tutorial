@@ -3,18 +3,17 @@ import re
 
 
 # Error decorator
-# def input_error(func):
-#     def wrapper(*args):
-#         try:
-#             return func(*args)
-#         except KeyError:
-#             return 'Wrong contact name.'
-#         except ValueError:
-#             return 'Cannot convert data.'
-#         except IndexError:
-#             return 'No such contact in your contact list.'
-#
-#     return wrapper
+def input_error(func):
+    def wrapper(*args):
+        try:
+            return func(*args)
+        except KeyError:
+            return "Wprowadź nazwę użytkownika."
+        except ValueError:
+            return "Podaj nazwę i numer telefonu."
+        except IndexError:
+            return "Niepoprawna komenda. Spróbuj ponownie."
+    return wrapper
 
 
 # Exit program function
@@ -25,13 +24,13 @@ def exit_program():
 
 
 # Adding contacts
-
+@input_error
 def add(contact_list, name, phone):
     contact_list[name] = phone
     print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
     return contact_list
 
-
+@input_error
 def change(contact_list, name, phone):
     if name in contact_list:
         contact_list[name] = phone
@@ -48,18 +47,20 @@ def show_all(contact_list):
         return 'Contact list is empty.'
     for key, value in contact_list.items():
         print(f'Name: {key}, Phone number: {value}')
+    print(f'')
 
 
 # Shoving contact phone number
 
 def phone(contact_list, name):
     if name in contact_list:
-        return print(f"The phone number for '{name}' is {contact_list[name]}.")
+        return print(f'The phone number for {name} is {contact_list[name]}.\n')
     else:
-        return print(f"Contact '{name}' not found.")
+        return print(f"Contact '{name}' not found.\n")
 
 
 COMMAND_LIST = {
+    'hello': lambda contact_list, *args: print("Hello. How can I help you?\n"),
     'add': add,
     'change': change,
     'phone': phone,
@@ -74,7 +75,7 @@ COMMAND_LIST = {
 
 contact_list = {}
 
-
+@input_error
 def main():
     print(f'Expecting commend.\n')
     while True:
@@ -89,11 +90,11 @@ def main():
         user_input = input('>>> ').lower()
         for key in COMMAND_LIST.keys():
             if user_input.startswith(key):
-                print(1)
-            else:
-                print(f'Unown command. Try againe.')
-
-
+                user_input = user_input.replace(key , '', 1)
+                COMMAND_LIST[key](contact_list, *user_input.split())
+                break
+        else:
+            print(f'Unknown command. Try again.\n')
 
 
 if __name__ == '__main__':
