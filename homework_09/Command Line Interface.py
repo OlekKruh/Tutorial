@@ -4,15 +4,8 @@ import re
 
 # Error decorator
 def input_error(func):
-    def wrapper(*args):
-        try:
-            return func(*args)
-        except KeyError:
-            return "Wprowadź nazwę użytkownika."
-        except ValueError:
-            return "Podaj nazwę i numer telefonu."
-        except IndexError:
-            return "Niepoprawna komenda. Spróbuj ponownie."
+    def wrapper(contact_list, name, phone):
+
     return wrapper
 
 
@@ -29,6 +22,7 @@ def add(contact_list, name, phone):
     contact_list[name] = phone
     print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
     return contact_list
+
 
 @input_error
 def change(contact_list, name, phone):
@@ -75,7 +69,7 @@ COMMAND_LIST = {
 
 contact_list = {}
 
-@input_error
+
 def main():
     print(f'Expecting commend.\n')
     while True:
@@ -90,7 +84,7 @@ def main():
         user_input = input('>>> ').lower()
         for key in COMMAND_LIST.keys():
             if user_input.startswith(key):
-                user_input = user_input.replace(key , '', 1)
+                user_input = user_input.replaceall(key, '', 1)
                 COMMAND_LIST[key](contact_list, *user_input.split())
                 break
         else:
