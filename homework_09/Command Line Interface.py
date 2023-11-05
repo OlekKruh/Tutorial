@@ -23,7 +23,7 @@ def add(contact_list, name, phone):
     print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
     return contact_list
 
-
+# Changing phone in contacts
 @input_error
 def change(contact_list, name, phone):
     if name in contact_list:
