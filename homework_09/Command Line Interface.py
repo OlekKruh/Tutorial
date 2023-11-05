@@ -86,8 +86,12 @@ def main():
               f'-show all => Shows all contacts numbers\n'
               f'-good bye, close, exit, quit => Exiting the program\n')
 
-        user_input = input('>>> ').lower().split()
-        print(user_input)
+        user_input = input('>>> ').lower()
+        for key in COMMAND_LIST.keys():
+            if user_input.startswith(key):
+                print(1)
+            else:
+                print(f'Unown command. Try againe.')
 
 
 
