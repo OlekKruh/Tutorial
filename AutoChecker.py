@@ -1,10 +1,13 @@
-from functools import reduce
+def to_lowercase_decorator(func):
+    def wrapper():
+        user_input = input("Введите текст: ")
+        lower_case_input = user_input.lower()
+        func(lower_case_input)
+    return wrapper
 
+# Пример использования декоратора
+@to_lowercase_decorator
+def process_input(user_input):
+    print("Ваш текст в нижнем регистре:", user_input)
 
-def amount_payment(payment):
-    return reduce(lambda x, y: x + y if y>0 else x, payment, 0)
-
-
-payment = [-1, -3, 4]
-
-print(amount_payment(payment))
+process_input()
