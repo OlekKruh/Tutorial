@@ -2,7 +2,7 @@ import sys
 import re
 
 
-# Error decorator
+#Error decorator
 def input_error(func):
     def wrapper(contact_list, *args):
         try:
@@ -32,8 +32,8 @@ def input_error(func):
             elif func.__name__ == 'add_f' and len(args) == 2:
                 name, phone = args
                 try:
-                    if phone.isdigit():
-                        return func(contact_list, name, phone)
+                    phone.isdigit()
+                    return func(contact_list, name, phone)
                 except ValueError:
                     print('The phone number must consist only of digits.\n')
 
