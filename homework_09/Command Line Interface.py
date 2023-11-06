@@ -6,32 +6,47 @@ import re
 def input_error(func):
     def wrapper(contact_list, *args):
         try:
-            if len(args) == 1:
+            if func.__name__ == 'phone_f' and len(args) == 1:
                 name = args[0]
                 try:
-                    contact_list[name]
+                    if contact_list[name]:
+                        return func(contact_list, name)
                 except KeyError:
-                    print('This name does not exist in the contact list1.\n')
-            elif len(args) == 2:
+                    print('This name does not exist in the contact list.\n')
+
+            elif func.__name__ == 'change_f' and len(args) == 2:
                 name, phone = args
-                if contact_list:
+                if not contact_list:
+                    print(f'Yours contact list is empty\n')
+                else:
                     try:
                         contact_list[name]
                     except KeyError:
-                        print('This name does not exist in the contact list2.\n')
+                        print('This name does not exist in the contact list.\n')
+                    try:
+                        if phone.isdigit():
+                            return func(contact_list, name, phone)
+                    except ValueError:
+                        print('The phone number must consist only of digits.\n')
+
+            elif func.__name__ == 'add_f' and len(args) == 2:
+                name, phone = args
                 try:
-                    phone.isdigit()
+                    if phone.isdigit():
+                        return func(contact_list, name, phone)
                 except ValueError:
                     print('The phone number must consist only of digits.\n')
+
+            else:
+                print(f'Enter the command according to the pattern\n')
         except IndexError:
             print('You have entered too many/few values. Try again according to the template.\n')
-        else:
-            return func(contact_list, *args)
+
     return wrapper
 
 
 # Exit program function
-def exit_program():
+def exit_program_f(*args):
     print(f'Exiting the program.\n'
           f'Have a nice day.')
     sys.exit()
@@ -39,58 +54,52 @@ def exit_program():
 
 # Adding contacts
 @input_error
-def add(contact_list, *args):
-    name = args[0]
-    phone = args[1]
+def add_f(contact_list, name, phone):
     contact_list[name] = phone
-    print(f'Contact {name} with phone number {phone} added to the list.\n')
+    print(f'Contact {name.capitalize()} with phone number {phone} added to the list.\n')
     return contact_list
 
 
 # Changing phone in contacts
 @input_error
-def change(contact_list, *args):
-    name = args[0]
-    phone = args[1]
+def change_f(contact_list, name, phone):
     if name in contact_list:
         contact_list[name] = phone
-        print(f"Contact {name} updated with phone number {phone}.")
+        print(f'Contact {name.capitalize()} updated with phone number {phone}.\n')
         return contact_list
     else:
-        return print(f"Contact {name} not found.")
+        return print(f'Contact {name.capitalize()} not found.\n')
 
 
 # Shoving content of Contact list
-def show_all(contact_list):
+def show_all_f(contact_list):
     if not contact_list:
-        return 'Contact list is empty.'
-    for key, value in contact_list.items():
-        print(f'Name: {key}, Phone number: {value}')
-    print(f'')
+        return print('Contact list is empty.\n')
+    for name, phone in contact_list.items():
+        print(f'Name: {name.capitalize()}, Phone number: {phone}\n')
 
 
 # Shoving contact phone number
 @input_error
-def phone(contact_list, *args):
-    name = args[0]
+def phone_f(contact_list, name):
     if name in contact_list:
-        return print(f'The phone number for {name} is {contact_list[name]}.\n')
+        return print(f'The phone number for {name.capitalize()} is {contact_list[name]}.\n')
     else:
-        return print(f"Contact {name} not found.\n")
+        return print(f"Contact {name.capitalize()} not found.\n")
 
 
 COMMAND_LIST = {
     'hello': lambda contact_list, *args: print("Hello. How can I help you?\n"),
-    'add': add,
-    'change': change,
-    'phone': phone,
-    'show all': show_all,
-    'good bye': exit_program,
-    'close': exit_program,
-    'exit': exit_program,
-    'quit': exit_program,
-    'qqq': exit_program,
-    '.': exit_program,
+    'add': add_f,
+    'change': change_f,
+    'phone': phone_f,
+    'show all': show_all_f,
+    'good bye': exit_program_f,
+    'close': exit_program_f,
+    'exit': exit_program_f,
+    'quit': exit_program_f,
+    'qqq': exit_program_f,
+    '.': exit_program_f,
 }
 
 contact_list = {}
