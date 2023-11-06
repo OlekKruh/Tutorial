@@ -5,6 +5,7 @@ import re
 # Error decorator
 def input_error(func):
     def wrapper(contact_list, *args):
+        try:
 
     return wrapper
 
@@ -30,6 +31,7 @@ def add(contact_list, *args):
 @input_error
 def change(contact_list, *args):
     name = args[0]
+    phone = args[1]
     if name in contact_list:
         contact_list[name] = phone
         print(f"Contact '{name}' updated with phone number '{phone}'.")
