@@ -8,6 +8,7 @@ def input_error(func):
             return func(*args, **kwargs)
         except (KeyError, ValueError, IndexError, TypeError) as e:
             return print(f'An error occurred: {e}\n')
+
     return wrapper
 
 
@@ -23,6 +24,7 @@ def show_all_f(contact_list):
     for name, phone in contact_list.items():
         print(f'Name: {name.capitalize()}, Phone number: {phone}')
     print('')
+
 
 @input_error
 def add_f(contact_list, *args):
@@ -50,12 +52,14 @@ def change_f(contact_list, *args):
     else:
         return print(f'Contact {name.capitalize()} not found.\n')
 
+
 @input_error
 def phone_f(contact_list, name):
     if name in contact_list:
         return print(f'The phone number for {name.capitalize()} is {contact_list[name]}.\n')
     else:
         return print(f"Contact {name.capitalize()} not found.\n")
+
 
 def help_f():
     print(f'Available commands:\n'
@@ -65,6 +69,7 @@ def help_f():
           f'-phone [name] => Shows contact number\n'
           f'-show all => Shows all contacts numbers\n'
           f'-good bye, close, exit, quit => Exiting the program\n')
+
 
 COMMAND_LIST = {
     'help': help_f,
@@ -83,6 +88,7 @@ COMMAND_LIST = {
 
 contact_list = {}
 
+
 def main():
     help_f()
     print(f'Expecting commend.\n')
@@ -92,7 +98,7 @@ def main():
             exit_program_f()
         else:
             for key in COMMAND_LIST.keys():
-                if user_input.startswith(key):
+                if user_input.startswith(key + ' '):
                     user_input = user_input.replace(key, '')
                     COMMAND_LIST[key](contact_list, *user_input.split())
                     break
