@@ -6,7 +6,27 @@ import re
 def input_error(func):
     def wrapper(contact_list, *args):
         try:
-
+            if len(args) == 1:
+                name = args[0]
+                try:
+                    contact_list[name]
+                except KeyError:
+                    print('This name does not exist in the contact list1.\n')
+            elif len(args) == 2:
+                name, phone = args
+                if contact_list:
+                    try:
+                        contact_list[name]
+                    except KeyError:
+                        print('This name does not exist in the contact list2.\n')
+                try:
+                    phone.isdigit()
+                except ValueError:
+                    print('The phone number must consist only of digits.\n')
+        except IndexError:
+            print('You have entered too many/few values. Try again according to the template.\n')
+        else:
+            return func(contact_list, *args)
     return wrapper
 
 
@@ -23,7 +43,7 @@ def add(contact_list, *args):
     name = args[0]
     phone = args[1]
     contact_list[name] = phone
-    print(f'Contact "{name}" with phone number "{phone}" added to the list.\n')
+    print(f'Contact {name} with phone number {phone} added to the list.\n')
     return contact_list
 
 
@@ -34,10 +54,10 @@ def change(contact_list, *args):
     phone = args[1]
     if name in contact_list:
         contact_list[name] = phone
-        print(f"Contact '{name}' updated with phone number '{phone}'.")
+        print(f"Contact {name} updated with phone number {phone}.")
         return contact_list
     else:
-        return print(f"Contact '{name}' not found.")
+        return print(f"Contact {name} not found.")
 
 
 # Shoving content of Contact list
@@ -50,12 +70,13 @@ def show_all(contact_list):
 
 
 # Shoving contact phone number
+@input_error
 def phone(contact_list, *args):
     name = args[0]
     if name in contact_list:
         return print(f'The phone number for {name} is {contact_list[name]}.\n')
     else:
-        return print(f"Contact '{name}' not found.\n")
+        return print(f"Contact {name} not found.\n")
 
 
 COMMAND_LIST = {
