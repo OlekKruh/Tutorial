@@ -1,4 +1,5 @@
 import sys
+import re
 
 
 def input_error(func):
@@ -67,7 +68,7 @@ def help_f():
 
 COMMAND_LIST = {
     'help': help_f,
-    'hello': lambda contact_list, *args: print("Hello. How can I help you?\n"),
+    'hello': lambda *args: print("Hello. How can I help you?\n"),
     'add': add_f,
     'change': change_f,
     'phone': phone_f,
@@ -87,13 +88,16 @@ def main():
     print(f'Expecting commend.\n')
     while True:
         user_input = input('>>> ').lower()
-        for key in COMMAND_LIST.keys():
-            if user_input.startswith(key):
-                user_input = user_input.replace(key, '')
-                COMMAND_LIST[key](contact_list, *user_input.split())
-                break
+        if re.findall(r'\.', user_input):
+            exit_program_f()
         else:
-            print(f'Unknown command. Try again.\n')
+            for key in COMMAND_LIST.keys():
+                if user_input.startswith(key):
+                    user_input = user_input.replace(key, '')
+                    COMMAND_LIST[key](contact_list, *user_input.split())
+                    break
+            else:
+                print(f'Unknown command. Try again.\n')
 
 
 if __name__ == '__main__':
