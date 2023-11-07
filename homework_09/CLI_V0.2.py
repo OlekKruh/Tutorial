@@ -7,23 +7,22 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
         except (KeyError, ValueError, IndexError, TypeError) as e:
-            return print(f'An error occurred: {e}\n')
-
+            return f'An error occurred: {e}'
     return wrapper
 
 
 def exit_program_f(*args):
-    print(f'Exiting the program.\n'
-          f'Have a nice day.')
-    sys.exit()
+    return sys.exit(f'Exiting the program.\nHave a nice day.')
+
 
 
 def show_all_f(contact_list):
+    result = []
     if not contact_list:
-        return print('Contact list is empty.\n')
+        return 'Contact list is empty.'
     for name, phone in contact_list.items():
-        print(f'Name: {name.capitalize()}, Phone number: {phone}')
-    print('')
+        result += f'Name: {name.capitalize()}, Phone number: {phone}',
+    return '\n'.join(result)
 
 
 @input_error
@@ -32,10 +31,9 @@ def add_f(contact_list, *args):
     try:
         int(phone)
         contact_list[name] = phone
-        print(f'Contact {name.capitalize()} with phone number {phone} added to the list.\n')
-        return contact_list
+        return f'Contact {name.capitalize()} with phone number {phone} added to the list.'
     except ValueError:
-        print(f'Wrong value. The phone number must consist of digits.\n')
+        return f'Wrong value. The phone number must consist of digits.'
 
 
 @input_error
@@ -45,35 +43,36 @@ def change_f(contact_list, *args):
         try:
             int(phone)
             contact_list[name] = phone
-            print(f'Contact {name.capitalize()} with phone number {phone} added to the list.\n')
-            return contact_list
+            return f'Contact {name.capitalize()} with phone number {phone} added to the list.\n'
         except ValueError:
-            print(f'Wrong value. The phone number must consist of digits.\n')
+            return f'Wrong value. The phone number must consist of digits.\n'
     else:
-        return print(f'Contact {name.capitalize()} not found.\n')
+        return f'Contact {name.capitalize()} not found.\n'
 
 
 @input_error
 def phone_f(contact_list, name):
     if name in contact_list:
-        return print(f'The phone number for {name.capitalize()} is {contact_list[name]}.\n')
+        return f'The phone number for {name.capitalize()} is {contact_list[name]}.\n'
     else:
-        return print(f"Contact {name.capitalize()} not found.\n")
+        return f"Contact {name.capitalize()} not found.\n"
 
 
-def help_f():
-    print(f'Available commands:\n'
-          f'-hello => Greetings\n'
-          f'-add [name] [phone number] => Adds a contact to the book\n'
-          f'-change [name] [phone number] => Changes a contact in a book\n'
-          f'-phone [name] => Shows contact number\n'
-          f'-show all => Shows all contacts numbers\n'
-          f'-good bye, close, exit, quit => Exiting the program\n')
+def help_f(*args):
+    return f'Available commands:\n' \
+           f'-hello => Greetings\n' \
+           f'-add [name] [phone number] => Adds a contact to the book\n' \
+           f'-change [name] [phone number] => Changes a contact in a book\n' \
+           f'-phone [name] => Shows contact number\n' \
+           f'-show all => Shows all contacts numbers\n' \
+           f'-good bye, close, exit, quit => Exiting the program'
 
+def hello_f(*args):
+    return f'Hello. How can I help you?'
 
 COMMAND_LIST = {
     'help': help_f,
-    'hello': lambda *args: print("Hello. How can I help you?\n"),
+    'hello': hello_f,
     'add': add_f,
     'change': change_f,
     'phone': phone_f,
@@ -90,20 +89,22 @@ contact_list = {}
 
 
 def main():
-    help_f()
-    print(f'Expecting commend.\n')
+    help_massage = help_f()
+    print(help_massage)
+    print(f'Expecting commend.')
     while True:
         user_input = input('>>> ').lower()
         if re.findall(r'\.', user_input):
-            exit_program_f()
+            exit_massage = exit_program_f()
+            print(exit_massage)
         else:
             for key in COMMAND_LIST.keys():
-                if user_input.startswith(key + ' '):
+                if user_input.startswith(key):
                     user_input = user_input.replace(key, '')
-                    COMMAND_LIST[key](contact_list, *user_input.split())
+                    print(COMMAND_LIST[key](contact_list, *user_input.split()))
                     break
             else:
-                print(f'Unknown command. Try again.\n')
+                print(f'Unknown command. Try again.')
 
 
 if __name__ == '__main__':
