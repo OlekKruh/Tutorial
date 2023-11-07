@@ -43,19 +43,19 @@ def change_f(contact_list, *args):
         try:
             int(phone)
             contact_list[name] = phone
-            return f'Contact {name.capitalize()} with phone number {phone} added to the list.\n'
+            return f'Contact {name.capitalize()} with phone number {phone} added to the list.'
         except ValueError:
-            return f'Wrong value. The phone number must consist of digits.\n'
+            return f'Wrong value. The phone number must consist of digits.'
     else:
-        return f'Contact {name.capitalize()} not found.\n'
+        return f'Contact {name.capitalize()} not found.'
 
 
 @input_error
 def phone_f(contact_list, name):
     if name in contact_list:
-        return f'The phone number for {name.capitalize()} is {contact_list[name]}.\n'
+        return f'The phone number for {name.capitalize()} is {contact_list[name]}.'
     else:
-        return f"Contact {name.capitalize()} not found.\n"
+        return f"Contact {name.capitalize()} not found."
 
 
 def help_f(*args):
