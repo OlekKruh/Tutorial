@@ -1,39 +1,29 @@
-import sys
-def input_error(func):
-    def wrapper(contact_list):
-        while True:
-            data = input(f'>>> ')
-            if len(data.split()) != 2:
-                print('Invalid input. Please enter both name and phone number.')
-                continue
+class Contacts:
+    current_id = 1
 
-            name, phone = data.split()
-            if not name.isalpha():
-                print('Invalid input. Name should only contain letters.')
-                continue
-            if not phone.isdigit():
-                print('Invalid input. Phone number should only contain digits.')
-                continue
+    def __init__(self):
+        self.contacts = []
 
-            contact_list[name] = phone
-            print(f'Contact "{name}" with phone number "{phone}" added to the list.')
-            break
+    def list_contacts(self):
+        return self.contacts
 
-        return contact_list
+    def add_contacts(self, name, phone, email, favorite):
+        self.contacts.append(
+            {
+                "id": Contacts.current_id,
+                "name": name,
+                "phone": phone,
+                "email": email,
+                "favorite": favorite,
+            }
+        )
+        Contacts.current_id += 1
 
-    return wrapper
+    def get_contact_by_id(self, id):
+        result = list(filter(lambda contact: contact.get("id") == id, self.contacts))
+        return result[0] if len(result) > 0 else None
 
-@input_error
-def add(contact_list):
-    print(f'Please enter the data according to the specified sample after >>>\n'
-          f'Sample: John 123456789')
-    data = input(f'>>> ')
-    name, phone = data.split()
-    contact_list[name] = phone
-    print(f'Contact "{name}" with phone number "{phone}" added to the list.')
-    return contact_list
+    def remove_contacts(self, id):
+        result = list(filter(lambda contact: contact.get("id") == id, self.contacts))
+        return self.contacts.remove(result[0]) if len(result) > 0 else None
 
-
-contact_list = {}
-
-add(contact_list)
