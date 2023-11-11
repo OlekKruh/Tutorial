@@ -61,12 +61,12 @@ class Record:
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
-
-    def delete(self, name):
-        del self.data[name]
-
-    def find(self, name):
-        return self.data.get(name)
-
-    def __str__(self):
-        return "\n".join(str(record) for record in self.data.values())
+    #
+    # def delete(self, name):
+    #     del self.data[name]
+    #
+    # def find(self, name):
+    #     return self.data.get(name)
+    #
+    # def __str__(self):
+    #     return "\n".join(str(record) for record in self.data.values())
