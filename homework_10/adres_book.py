@@ -80,34 +80,3 @@ class AddressBook(UserDict):
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
 
-
-# Створення нової адресної книги
-book = AddressBook()
-
-# Створення запису для Bob
-bob_record = Record("Bob", "5551236780")
-# Додавання запису Bob до адресної книги
-book.add_record(bob_record)
-
-# Пошук та виведення запису для Bob
-print(book.find("Bob"))
-
-# Створення запису для Marly
-marly_record = Record("Marly", "5559876543")
-# Додавання запису Marly до адресної книги
-book.add_record(marly_record)
-
-# Перевірка всіх записів у книзі
-print(book)
-
-# Редагування номеру телефону для Bob
-bob_record.edit_phone("5550001111", "5551236780")
-print(book.find("Bob"))  # Виведення: Contact: Bob, phones: 5550001111
-
-# Додавання нового номеру телефону для Bob
-bob_record.add_phone("5552223333")
-print(book.find("Bob"))  # Виведення: Contact: Bob, phones: 5550001111,5552223333
-
-# Видалення запису Marly
-book.delete("Marly")
-print(book)
