@@ -8,7 +8,7 @@ class Field:
 
 
 class Name(Field):
-    # nazwa, Imie
+    # sprawdza Imie i Nazwisko
     def validate(self):
         if not (
                 isinstance(self.value, str) and
@@ -19,8 +19,8 @@ class Name(Field):
 
 
 class Phone(Field):
-    # numer telefonu
-    def validate(self, phone):
+    # sprawdza numer telefonu
+    def validate(self):
         if not (
                 isinstance(self.value, str) and
                 self.value.isdigit() and
@@ -36,9 +36,7 @@ class Record:
 
     # logika dodawania
     def add_phone(self, phone):
-        self.name.validate()
         phone_fild = Phone(phone)
-        phone_fild.validate()
         self.phones.append(phone_fild)
 
     # logika usuwania
