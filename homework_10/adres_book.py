@@ -79,35 +79,36 @@ class AddressBook(UserDict):
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
 
-# Створення нової адресної книги
+
+# Tworzenie nowej książki adresowej
 book = AddressBook()
 
-# Створення запису для John
+# Tworzenie wpisu dla Johna
 john_record = Record("John")
 john_record.add_phone("1234567890")
 john_record.add_phone("5555555555")
 
-# Додавання запису John до адресної книги
+# Dodawanie wpisu Johna do książki adresowej
 book.add_record(john_record)
 
-# Створення та додавання нового запису для Jane
+# Tworzenie i dodawanie nowego wpisu dla Jane
 jane_record = Record("Jane")
 jane_record.add_phone("9876543210")
 book.add_record(jane_record)
 
-# Виведення всіх записів у книзі
+# Wyświetlanie wszystkich wpisów w książce
 for name, record in book.data.items():
     print(record)
 
-# Знаходження та редагування телефону для John
+# Znajdowanie i edycja numeru telefonu dla Johna
 john = book.find("John")
 john.edit_phone("1234567890", "1112223333")
 
-print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+print(john)  # Wyjście: Kontakt: John Wick, telefony: 1112223333; 5555555555
 
-# Пошук конкретного телефону у записі John
+# Szukanie konkretengo numeru telefonu w wpisie Johna
 found_phone = john.find_phone("5555555555")
-print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+print(f"{john.name}: {found_phone}")  # Wyjście: 5555555555
 
-# Видалення запису Jane
+# Usuwanie wpisu Jane
 book.delete("Jane")
