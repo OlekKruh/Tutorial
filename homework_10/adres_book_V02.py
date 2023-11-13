@@ -11,12 +11,12 @@ class Field:
 
 
 class Name(Field):
-    # sprawdza Imie i Nazwisko
+    # Sprawdza Imie i Nazwisko.
     def validate(self):
         try:
             first_last_name = re.match(r'^[A-Za-z]+\s[A-Za-z]+$', self.user_data)
             if not first_last_name:
-                raise ValueError('Invalid Name format.\n')
+                return False
             return True
         except ValueError as e:
             print(f"Error: {e}")
@@ -24,27 +24,27 @@ class Name(Field):
 
 
 class Phone(Field):
-    # sprawdza numer telefonu
+    # Sprawdza numer telefonu.
     def validate(self):
         try:
             phone_numbers = re.findall(r'\d{10}', self.user_data)
             if not phone_numbers:
-                raise ValueError('Invalid Phone format.\n')
+                return False
             return True
         except ValueError as e:
             print(f"Error: {e}")
             return False
 
 
-class Emaile(Field):
-
+class Email(Field):
+    # Sprawdza Maila.
     def validate(self):
         try:
             email = re.findall(r'[A-Za-z0-9_.+-]+@[A-Za-z0-9]+\.[A-Za-z]'
                                r'|[A-Za-z0-9_.+-]+@[A-Za-z0-9]+\.[A-Za-z]+\.[A-Za-z]',
                                self.user_data)
             if not email:
-                raise ValueError('Invalid Emaile format.\n')
+                return False
             return True
         except ValueError as e:
             print(f"Error: {e}")
@@ -52,12 +52,12 @@ class Emaile(Field):
 
 
 class BirthDay(Field):
-
+    # Sprawdza urodziny.
     def validate(self):
         try:
             birthday = re.findall(r'\d{2}.\d{2}.\d{4}', self.user_data)
             if not birthday:
-                raise ValueError('Invalid Birthday format.\n')
+                return False
             return True
         except ValueError as e:
             print(f"Error: {e}")
@@ -71,9 +71,9 @@ class Record:
             'Name': None,
             'Phone': None,
             'Email': None,
-            'Birthday': None,
+            'BirthDay': None,
         }
-
+        # Sprawdzamy, czy User wprowadził poprawnie Imie z Nazwiskiem.
         try:
             if len(self.user_data) < 2:
                 raise ValueError('Insufficient data.\n'
@@ -86,13 +86,31 @@ class Record:
                                      'First of all enter firstname then lastname.\n'
                                      'Then other data.\n')
                 else:
-                    self.contact['name'] = self.name
+                    self.contact['Name'] = self.name
                     self.add_optional_data(user_data[2:])
         except ValueError as e:
             print(f"Error: {e}")
 
+    # Logika dodawania opcjonalnej informacji.
+    def add_optional_data(self, optional_data):
+        field_classes = {
+            'Phone': Phone,
+            'Email': Email,
+            'BirthDay': BirthDay,
+        }
 
-    # def add_optional_data(self, optional_data):
+        for field_key, field_class in field_classes.items():
+            for i in optional_data:
+                data = field_class(i)
+                if data.validate():
+                    self.contact[field_key] = data
+
+    # Czytelne wyświetlanie.
+    def __str__(self):
+        result = ""
+        for key, value in self.contact.items():
+            result += f'{key}: {value}\n'
+        return result
 
 
 # logika dodawania
@@ -140,10 +158,10 @@ data1 = ["John", "Doe", "john.doe@example.com", "02-20-1988"]
 record1 = Record(data1)
 print(record1)
 
-data2 = ["John", "john.doe@example.com", "01-05-1988"]
+data2 = ["John", "1234567890", "01-05-1988"]
 record2 = Record(data2)
 print(record2)
 
-data3 = ["Hanna", "Smith", "12-10-1988"]
+data3 = ["Hanna", "Smith", "1234567890", "12-10-1988"]
 record3 = Record(data3)
 print(record3)
