@@ -5,6 +5,9 @@ class Field:
     def __init__(self, value):
         self.value = value
 
+    def __str__(self):
+        return str(self.value)
+
 
 class Name(Field):
     # sprawdza Imie i Nazwisko
@@ -84,7 +87,7 @@ class AddressBook(UserDict):
 book = AddressBook()
 
 # Tworzenie wpisu dla Johna
-john_record = Record("John")
+john_record = Record("John Wick")
 john_record.add_phone("1234567890")
 john_record.add_phone("5555555555")
 
