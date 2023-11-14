@@ -9,6 +9,7 @@ class Field:
     def __str__(self):
         return str(self.user_data)
 
+
 class Name(Field):
     # Sprawdza Imie i Nazwisko.
     def validate(self):
@@ -66,26 +67,25 @@ class BirthDay(Field):
 class Record:
     def __init__(self, user_data):
         self.user_data = user_data
-        self.contact = {
-            'Name': None,
-            'Phone': None,
-            'Email': None,
-            'BirthDay': None,
-        }
+        self.name = None
+        self.phone = []
+        self.email = None
+        self.birthday = None
+
         # Sprawdzamy, czy User wprowadził poprawnie Imie z Nazwiskiem.
         try:
             if len(self.user_data) < 2:
                 raise ValueError('Insufficient data.\n'
                                  'At least first name and last name are required.\n'
-                                 'Ather data is optional\n')
+                                 'Other data is optional\n')
             else:
-                self.name = Name(' '.join(self.user_data[:2]))
-                if not self.name.validate():
+                name_candidate = Name(' '.join(self.user_data[:2]))
+                if not name_candidate.validate():
                     raise ValueError('Invalid Name format.\n'
                                      'First of all enter firstname then lastname.\n'
                                      'Then other data.\n')
                 else:
-                    self.contact['Name'] = self.name
+                    self.name = name_candidate
                     self.add_optional_data(user_data[2:])
         except ValueError as e:
             print(f"Error: {e}")
@@ -102,36 +102,56 @@ class Record:
             for i in optional_data:
                 data = field_class(i)
                 if data.validate():
-                    self.contact[field_key] = data
+                    if field_key == 'Phone':
+                        self.phone.append(data)
+                    elif field_key == 'Email':
+                        self.email = data
+                    elif field_key == 'BirthDay':
+                        self.birthday = data
 
     # Czytelne wyświetlanie.
     def __str__(self):
-        result = ""
-        for key, value in self.contact.items():
-            result += f'{key}: {value}\n'
+        result = (f'Name: {self.name}\n'
+                  f'Phone: {", ".join(map(str, self.phone))}\n')
+        if self.email:
+            result += f'Email: {self.email}\n'
+        if self.birthday:
+            result += f'BirthDay: {self.birthday}\n'
         return result
 
     # Usuwania opcjonalnej informacji.
     def delete_optional_data(self, field_key):
-        if field_key in self.contact:
-            self.contact[field_key] = None
-            print(f"{field_key} deleted successfully.")
+        if field_key == 'Phone':
+            print(f"Phone {self.phone} deleted successfully.\n")
+            self.phone = []
+        elif field_key == 'Email':
+            print(f"Email {self.email} deleted successfully.\n")
+            self.email = None
+        elif field_key == 'BirthDay':
+            print(f"BirthDay {self.birthday} deleted successfully.\n")
+            self.birthday = None
         else:
-            print(f"{field_key} not found in the contact.")
+            print(f"{field_key} not found in the contact.\n")
 
     # Zamiana opcjonalnego informacji.
     def edit_optional_data(self, field_key, new_data):
-        if field_key in self.contact:
-            self.contact[field_key] = new_data
-            print(f"{field_key} replaced successfully with {new_data}.")
+        if field_key == 'Phone':
+            self.phone = [new_data]
+        elif field_key == 'Email':
+            self.email = new_data
+        elif field_key == 'BirthDay':
+            self.birthday = new_data
         else:
-            print(f"{field_key} not found in the contact.")
+            print(f"Invalid field key: {field_key}")
 
 
 class AddressBook(UserDict):
     # Zapis do ksiegi.
     def add_record(self, record):
-        self.data[record.contact['Name'].user_data] = record
+        if record.name:
+            self.data[record.name.user_data] = record
+        else:
+            print('Error: Cannot add record without a valid Name.')
 
     # EXTERMINATUS.
     def delete_contact(self, name):
@@ -145,89 +165,24 @@ class AddressBook(UserDict):
         return "\n".join(str(record) for record in self.data.values())
 
 
-# Tworzenie różnych danych testowych
-data1 = ["John", "Doe", "john.doe@example.com", "02-20-1988"]
-data2 = ["Jane", "Smith", "555-1234", "jane.smith@example.com"]
-data3 = ["Alice", "Johnson", "alice.j@example.com", "01-15-1995"]
-data4 = ["Bob", "Brown", "1234567890", "bob.b@example.com", "07-07-1980"]
-data5 = ["Charlie", "Chaplin", "charlie.c@example.com", "03-16-1975"]
-data6 = ["David", "Davis", "555-9876", "david.d@example.com", "11-30-1990"]
-data7 = ["Eva", "Evans", "eva.e@example.com", "09-22-1985"]
-data8 = ["Frank", "Fisher", "9876543210", "frank.f@example.com", "05-12-2000"]
-data9 = ["Grace", "Green", "grace.g@example.com", "04-03-1992"]
-data10 = ["Henry", "Hill", "555-5432", "henry.h@example.com", "08-18-1982"]
+# Test
+data1 = ["John", "Doe", "1234567890", "john.doe@example.com", "02-20-1988"]
+data2 = ["John", "john.doe@example.com", "01-05-1988"]
+data3 = ["Alice", "Johnson", "555-1234", "alice.johnson@example.com", "06-15-1990"]
+data4 = ["Bob", "Smith", "7890123456", "bob.smith@example.com"]
+data5 = ["Eve", "Evans", "eve.evans@example.com", "12-25-2000"]
 
-# Tworzenie rekordów i dodawanie do książki adresowej
 record1 = Record(data1)
 record2 = Record(data2)
 record3 = Record(data3)
 record4 = Record(data4)
 record5 = Record(data5)
-record6 = Record(data6)
-record7 = Record(data7)
-record8 = Record(data8)
-record9 = Record(data9)
-record10 = Record(data10)
 
-# Wyświetlanie informacji o rekordach przed modyfikacjami
-print("Before modifications:")
-print(record1)
-print(record2)
-print(record3)
-print(record4)
-print(record5)
-print(record6)
-print(record7)
-print(record8)
-print(record9)
-print(record10)
+address_book = AddressBook()
+address_book.add_record(record1)
+address_book.add_record(record2)
+address_book.add_record(record3)
+address_book.add_record(record4)
+address_book.add_record(record5)
 
-# Usuwanie opcjonalnych informacji
-record1.delete_optional_data('Phone')
-record2.delete_optional_data('Email')
-record3.delete_optional_data('BirthDay')
-record4.delete_optional_data('Phone')
-record5.delete_optional_data('Email')
-record6.delete_optional_data('BirthDay')
-record7.delete_optional_data('Phone')
-record8.delete_optional_data('Email')
-record9.delete_optional_data('BirthDay')
-record10.delete_optional_data('Phone')
-
-# Wyświetlanie informacji o rekordach po usunięciu opcjonalnych informacji
-print("\nAfter deleting optional data:")
-print(record1)
-print(record2)
-print(record3)
-print(record4)
-print(record5)
-print(record6)
-print(record7)
-print(record8)
-print(record9)
-print(record10)
-
-# Edytowanie opcjonalnych informacji
-record1.edit_optional_data('Phone', '555-9999')
-record2.edit_optional_data('BirthDay', '12-31-2000')
-record3.edit_optional_data('Email', 'new.email@example.com')
-record4.edit_optional_data('BirthDay', '01-01-1990')
-record5.edit_optional_data('Phone', '1234567890')
-record6.edit_optional_data('Email', 'updated.email@example.com')
-record7.edit_optional_data('Phone', '9876543210')
-record8.edit_optional_data('BirthDay', '06-15-1988')
-record9.edit_optional_data('Email', 'modified.email@example.com')
-record10.edit_optional_data('Phone', '999-8888')
-
-# Wyświetlanie informacji o rekordach po edycji opcjonalnych informacji
-print("\nAfter editing optional data:")
-print(record1)
-print(record2)
-print(record3)
-print(record4)
-print(record5)
-print(record6)
-print(record7)
-print(record8)
-print(record9)
-print(record10)
+print(address_book)
