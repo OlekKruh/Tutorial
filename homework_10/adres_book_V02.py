@@ -11,6 +11,7 @@ class Field:
 
 
 class Name(Field):
+
     # Sprawdza Imie i Nazwisko.
     def validate(self):
         try:
@@ -81,6 +82,7 @@ class Record:
             else:
                 name_candidate = Name(' '.join(self.user_data[:2]))
                 if not name_candidate.validate():
+                    self.i = name_candidate
                     raise ValueError('Invalid Name format.\n'
                                      'First of all enter firstname then lastname.\n'
                                      'Then other data.\n')
@@ -151,7 +153,7 @@ class AddressBook(UserDict):
         if record.name:
             self.data[record.name.user_data] = record
         else:
-            print('Error: Cannot add record without a valid Name.')
+            print(f'Error: Cannot add record {record.i} without a valid Name.')
 
     # EXTERMINATUS.
     def delete_contact(self, name):
@@ -171,12 +173,22 @@ data2 = ["John", "john.doe@example.com", "01-05-1988"]
 data3 = ["Alice", "Johnson", "555-1234", "alice.johnson@example.com", "06-15-1990"]
 data4 = ["Bob", "Smith", "7890123456", "bob.smith@example.com"]
 data5 = ["Eve", "Evans", "eve.evans@example.com", "12-25-2000"]
+data6 = ["Michael", "Jordan", "123-456-7890", "michael.jordan@example.com", "02-17-1963"]
+data7 = ["LeBron", "James", "567-890-1234", "lebron.james@example.com", "12-30-1984"]
+data8 = ["Kobe", "Bryant", "9876543210", "kobe.bryant@example.com"]
+data9 = ["Stephen", "555-4321", "stephen.curry@example.com", "03-14-1988"]
+data10 = ["Kevin", "Durant", "111-222-3333", "kevin.durant@example.com"]
 
 record1 = Record(data1)
 record2 = Record(data2)
 record3 = Record(data3)
 record4 = Record(data4)
 record5 = Record(data5)
+record6 = Record(data6)
+record7 = Record(data7)
+record8 = Record(data8)
+record9 = Record(data9)
+record10 = Record(data10)
 
 address_book = AddressBook()
 address_book.add_record(record1)
@@ -184,5 +196,10 @@ address_book.add_record(record2)
 address_book.add_record(record3)
 address_book.add_record(record4)
 address_book.add_record(record5)
+address_book.add_record(record6)
+address_book.add_record(record7)
+address_book.add_record(record8)
+address_book.add_record(record9)
+address_book.add_record(record10)
 
 print(address_book)
