@@ -15,7 +15,9 @@ class Name(Field):
     # Sprawdza Imie i Nazwisko.
     def validate(self):
         try:
-            first_last_name = re.match(r'^[A-Za-z]+\s[A-Za-z]+$', self.user_data)
+            first_last_name = re.match(
+                r'^[A-Za-z]+\s[A-Za-z]+$',
+                self.user_data)
             if not first_last_name:
                 return False
             return True
@@ -28,7 +30,9 @@ class Phone(Field):
     # Sprawdza numer telefonu.
     def validate(self):
         try:
-            phone_numbers = re.findall(r'\d{10}', self.user_data)
+            phone_numbers = re.findall(
+                r'\d{10}',
+                self.user_data)
             if not phone_numbers:
                 return False
             return True
@@ -48,7 +52,6 @@ class Record:
         else:
             self.name = Name(name)
         self.phone = []
-
 
     # Dodawania opcjonalnej informacji.
     def add_phone(self, phone):
@@ -88,7 +91,6 @@ class AddressBook(UserDict):
     # Zapis do ksiegi.
     def add_record(self, record: Record):
         self.data[record.name.user_data] = record
-
 
     # EXTERMINATUS.
     def delete_contact(self, name):
