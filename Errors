@@ -1,11 +1,22 @@
-Функция find_all_links возвращает неправильный результат:
-[].
+class PositiveNumber:
+    def __init__(self):
+        self.__value = None
 
-Ожидалось, что функция find_all_links при получении параметра
-'The main search site in the world is https://www.google.com
-The main social network for people in the world is https://www.facebook.com
-But programmers have their own social network http://github.com
-There they share their code. some url to check https://www..facebook.com www.facebook.com '
+    @property
+    def value(self):
+        return self.__value
 
-вернет следующий список
-['https://www.google.com', 'https://www.facebook.com', 'http://github.com']
+    @value.setter
+    def value(self, new_value):
+        if new_value > 0:
+            self.__value = new_value
+        else:
+            print('Only numbers greater zero accepted')
+
+
+p = PositiveNumber()
+p.value = 1
+print(p.value)  # 1
+p.value = -1    # Only numbers greater zero accepted
+p._PositiveNumber__value = -1
+print(p.value)  # -1s
