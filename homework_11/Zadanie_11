@@ -1,0 +1,18 @@
+Zadania
+W tym zadaniu domowym będziemy
+
+Dodawać pole Birthday. To pole jest opcjonalne, ale może być tylko jedno.
+Dodamy też funkcjonalność do pracy z Birthday w klasie Record, a mianowicie funkcję days_to_birthday,
+która zwraca liczbę dni do następnych urodzin.
+Dodamy funkcjonalności sprawdzania poprawności wartości dla pól Phone, Birthday.
+Dodamy paginacji (wyjście strona po stronie) dla AddressBook dla sytuacji, gdy książka jest bardzo duża
+i trzeba pokazać zawartość w częściach, a nie wszystkie naraz. Implementujemy to poprzez utworzenie iteratora nad rekordami.
+Kryteria akceptacji:
+Klasa AddressBook implementuje metodę iterator, która zwraca generator przez rekordy AddressBook i zwraca
+widok dla N rekordów w jednej iteracji.
+Klasa Record przyjmuje jeszcze jeden dodatkowy (opcjonalny) argument klasy Birthday
+Klasa Record implementuje metodę days_to_birthday, która zwraca liczbę dni do następnych urodzin kontaktu,
+jeśli podano datę urodzin.
+Logika setter i getter dla atrybutów value dziedziczących po Field.
+Sprawdzenie poprawności podrzędnego setter numeru telefonu dla value klasy Phone.
+Sprawdzenie poprawności podrzędnego settera daty urodzin dla wartości klasy Birthday.

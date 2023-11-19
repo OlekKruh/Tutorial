@@ -11,8 +11,7 @@ class Field:
 
 
 class Name(Field):
-
-    # Sprawdza Imie i Nazwisko.
+    # Sprawdza Imię i Nazwisko.
     def validate(self):
         try:
             first_last_name = re.match(
@@ -40,9 +39,23 @@ class Phone(Field):
             print(f"Error: {e}")
             return False
 
+
 class BirthDay(Field):
+    # Sprawdza date urodzenia.
     def validate(self):
         try:
+            birth_day = re.findall(
+                r'^(0[1-9]|[12][0-9]|3[01])\.'  # dzień
+                r'(0[1-9]|1[0-2])\.'  # miesiąc 
+                r'(19[4-9][0-9]|200[0-9]|201[0-9]|202[0-4])$',  # rok
+                self.user_data
+            )
+            if not birth_day:
+                return False
+            return True
+        except ValueError as e:
+            print(f'Error: {e}')
+            return False
 
 
 class Record:
@@ -52,7 +65,7 @@ class Record:
                 raise ValueError(f'Error: Invalid Name format for {name}')
         except ValueError as e:
             print(e)
-            self.name = Name('Mr Smith')
+            self.name = None  # None jak nie zgadza się imię i nazwisko.
         else:
             self.name = Name(name)
         self.phone = []
@@ -66,12 +79,6 @@ class Record:
             print(e)
         else:
             self.phone.append(Phone(phone))
-
-    # Czytelne wyświetlanie.
-    def __str__(self):
-        result = (f'Name: {self.name}\n'
-                  f'Phone: {", ".join(map(str, self.phone))}\n')
-        return result
 
     # Usuwania opcjonalnej informacji.
     def delete_phone(self, phone):
@@ -90,11 +97,21 @@ class Record:
                     self.phone[key] = Phone(new_phone)
                     break
 
+    # Czytelne wyświetlanie.
+    def __str__(self):
+        result = (f'Name: {self.name}\n'
+                  f'Phone: {", ".join(map(str, self.phone))}\n')
+        return result
+
 
 class AddressBook(UserDict):
-    # Zapis do ksiegi.
+    # Zapis do księgi.
     def add_record(self, record: Record):
-        self.data[record.name.user_data] = record
+        if record.name is None:
+            raise ValueError(f'Error: The contact cannot be created.\n'
+                             f'First and last name entered incorrectly.\n')
+        else:
+            self.data[record.name.user_data] = record  # Dodać sprawdzenie. Jak None to wywalić bląd.
 
     # EXTERMINATUS.
     def delete_contact(self, name):
