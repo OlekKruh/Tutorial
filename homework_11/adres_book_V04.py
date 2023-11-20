@@ -5,8 +5,7 @@ from datetime import datetime
 
 class Field:
     def __init__(self, value):
-        self.__value = None
-        self.value = value
+        self.__value = value
 
     @property
     def value(self):
@@ -35,6 +34,9 @@ class Phone(Field):
     def validate(self, value):
         return bool(re.match(r'\d{10}', value))
 
+    def __str__(self):
+        return f"+48 {self.value[:3]}-{self.value[3:6]}-{self.value[6:]}" if self.value else "None"
+
 
 class BirthDay(Field):
     def validate(self, value):
@@ -45,23 +47,22 @@ class BirthDay(Field):
 
 
 class Record:
-    def __init__(self, name):
+    def __init__(self, name, phone=None, birthday=None):
         try:
-            if not Name(name).validate(name):
+            if not Name(str(name)).validate(name):
                 raise ValueError(f'Error: Invalid Name format for {name}\n')
         except ValueError as e:
             print(e)
             self.name = None  # None jak nie zgadza się imię i nazwisko.
         else:
             self.name = Name(name)
-        self.phone = []
-        self.birthday = []
-        self.days_left = None
+        self.phone = [Phone(str(phone))] if phone else []
+        self.birthday = [BirthDay(str(birthday))] if birthday else None
 
     # Dodawania numeru telefonu.
     def add_phone(self, phone):
         try:
-            if not Phone(phone).validate(phone):
+            if not Phone(str(phone)).validate(phone):
                 raise ValueError(f'Error: Invalid phone number format for {phone}\n')
         except ValueError as e:
             print(e)
@@ -71,7 +72,7 @@ class Record:
     # Dodawania daty urodzenia.
     def add_birthday(self, birthday):
         try:
-            if not BirthDay(birthday).validate(birthday):
+            if not BirthDay(str(birthday)).validate(birthday):
                 raise ValueError(f'Error: Invalid birthday format for {birthday}\n')
         except ValueError as e:
             print(e)
@@ -84,7 +85,7 @@ class Record:
 
     # Usuwania daty urodzin.
     def delete_birthday(self):
-        self.birthday = []
+        self.birthday = None
         print(f'Birthday deleted successfully.')
 
     # Zamiana numeru telefonu.
@@ -108,29 +109,28 @@ class Record:
         except ValueError as e:
             print(e)
         else:
-            self.birthday = [BirthDay(new_birthday)]
+            self.birthday = [BirthDay(str(new_birthday))]
 
     def days_to_birthday(self):
         if self.birthday:
             today = datetime.now().date()
-            day, month, year = map(int, re.findall(r'\d+', self.birthday[0].value))
+            day, month, year = map(int, re.findall(r'\d+', str(self.birthday[0].value)))
             next_birthday = datetime(today.year, month, day).date()
 
             if today > next_birthday:
                 next_birthday = datetime(today.year + 1, month, day).date()
 
-            self.days_left = (next_birthday - today).days
-            return self.days_left
+            return (next_birthday - today).days
         else:
             return ''
 
     # Czytelne wyświetlanie.
     def __str__(self):
-        result = (f'Name: {self.name}\n'
-                  f'Phone: {", ".join(map(str, self.phone))}\n'
-                  f'Birthday: {", ".join(map(str, self.birthday))}\n'
-                  f'Days to next Birthday left: {self.days_to_birthday()}\n')
-        return result
+        birthday_str = str(self.birthday[0]) if self.birthday else "None"
+        return (f'Name: {self.name}\n'
+                f'Phone: {", ".join(map(str, self.phone))}\n'
+                f'Birthday: {birthday_str}\n'
+                f'Days to next Birthday left: {self.days_to_birthday()}\n')
 
 
 class AddressBook(UserDict):
@@ -152,3 +152,4 @@ class AddressBook(UserDict):
 
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
+
