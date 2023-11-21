@@ -57,7 +57,7 @@ class Record:
         else:
             self.name = Name(name)
         self.phone = [Phone(str(phone))] if phone else []
-        self.birthday = [BirthDay(str(birthday))] if birthday else None
+        self.birthday = BirthDay(str(birthday)) if birthday else None
 
     # Dodawania numeru telefonu.
     def add_phone(self, phone):
@@ -77,7 +77,7 @@ class Record:
         except ValueError as e:
             print(e)
         else:
-            self.birthday.append(BirthDay(birthday))
+            self.birthday = BirthDay(birthday)
 
     # Usuwania numeru telefonu.
     def delete_phone(self, phone):
@@ -109,7 +109,7 @@ class Record:
         except ValueError as e:
             print(e)
         else:
-            self.birthday = [BirthDay(str(new_birthday))]
+            self.birthday = BirthDay(str(new_birthday))
 
     def days_to_birthday(self):
         if self.birthday:
