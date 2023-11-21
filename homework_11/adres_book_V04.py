@@ -114,7 +114,7 @@ class Record:
     def days_to_birthday(self):
         if self.birthday:
             today = datetime.now().date()
-            day, month, year = map(int, re.findall(r'\d+', str(self.birthday[0].value)))
+            day, month, year = map(int, re.findall(r'\d+', str(self.birthday.value)))
             next_birthday = datetime(today.year, month, day).date()
 
             if today > next_birthday:
