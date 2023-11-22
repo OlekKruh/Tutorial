@@ -134,6 +134,33 @@ class Record:
 
 
 class AddressBook(UserDict):
+    def __init__(self, records):
+        super().__init__(records)
+        self.page_keys = list(records.keys())
+        self.current_page = 1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        start_index = (self.current_page - 1) * 1
+        end_index = start_index + 1
+        if start_index < len(self.page_keys):
+            page_keys = self.page_keys[start_index:end_index]
+            self.current_page += 1
+            return [self.data[key] for key in page_keys]
+        else:
+            raise StopIteration()
+
+    # Przewijamy.
+    def display_next_page(self):
+        try:
+            page = next(self)
+            for record in page:
+                print(record)
+        except StopIteration:
+            print("No more pages.")
+
     # Zapis do księgi.
     def add_record(self, record: Record):
         if record.name is None:
@@ -152,4 +179,31 @@ class AddressBook(UserDict):
 
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
+
+# Создание экземпляра адресной книги
+address_book = AddressBook({})
+
+# Создание записей
+record1 = Record("John Doe", "1234567890", "01.01.1990")
+record2 = Record("Jane Smith", "9876543210")
+record3 = Record("Alice Johnson", "5551112233")
+
+# Добавление записей в адресную книгу
+address_book.add_record(record1)
+address_book.add_record(record2)
+address_book.add_record(record3)
+
+print(address_book)
+
+address_book.display_next_page()
+address_book.display_next_page()
+
+address_book.delete_contact("John Doe")
+
+print(address_book)
+
+new_record = Record("Bob Johnson", "5554441234")
+address_book.add_record(new_record)
+
+print(address_book)
 
