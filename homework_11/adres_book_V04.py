@@ -126,7 +126,7 @@ class Record:
 
     # Czytelne wyświetlanie.
     def __str__(self):
-        birthday_str = str(self.birthday) if self.birthday else "None"
+        birthday_str = str(self.birthday) if self.birthday else ''
         return (f'Name: {self.name}\n'
                 f'Phone: {", ".join(map(str, self.phone))}\n'
                 f'Birthday: {birthday_str}\n'
@@ -134,20 +134,21 @@ class Record:
 
 
 class AddressBook(UserDict):
-    def __init__(self, records):
+    def __init__(self, records={}):
         super().__init__(records)
-        self.page_keys = list(records.keys())
-        self.current_page = 1
+        self.page_size = 1
+        self.page_index = 0
 
     def __iter__(self):
+        self.page_index = 0
         return self
 
     def __next__(self):
-        start_index = (self.current_page - 1) * 1
-        end_index = start_index + 1
-        if start_index < len(self.page_keys):
-            page_keys = self.page_keys[start_index:end_index]
-            self.current_page += 1
+        start_index = self.page_index * self.page_size
+        end_index = start_index + self.page_size
+        page_keys = list(self.data.keys())[start_index:end_index]
+        if page_keys:
+            self.page_index += 1
             return [self.data[key] for key in page_keys]
         else:
             raise StopIteration()
@@ -159,7 +160,7 @@ class AddressBook(UserDict):
             for record in page:
                 print(record)
         except StopIteration:
-            print("No more pages.")
+            print("No more pages.\n")
 
     # Zapis do księgi.
     def add_record(self, record: Record):
@@ -173,37 +174,43 @@ class AddressBook(UserDict):
     def delete_contact(self, name):
         if name in self.data:
             del self.data[name]
-            print(f"Contact {name} deleted successfully.\n")
+            print(f"Contact {name} exterminated successfully ;)\n")
         else:
             print(f"Contact {name} not found in the address book.\n")
 
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
 
-# Создание экземпляра адресной книги
-address_book = AddressBook({})
 
-# Создание записей
-record1 = Record("John Doe", "1234567890", "01.01.1990")
+# Tworzenie księgi.
+address_book = AddressBook()
+
+# Tworzenie eksemplarów.
+record1 = Record("Horus Lupercal", "1234567890", "01.01.1990")
 record2 = Record("Jane Smith", "9876543210")
 record3 = Record("Alice Johnson", "5551112233")
 
-# Добавление записей в адресную книгу
+# Dodajemy zapis do księgi.
 address_book.add_record(record1)
 address_book.add_record(record2)
 address_book.add_record(record3)
 
-print(address_book)
-
+# Wyświetlamy record № po kolei od pierwszego.
 address_book.display_next_page()
 address_book.display_next_page()
+address_book.display_next_page()
+address_book.display_next_page()  # Więcej nie ma.
 
-address_book.delete_contact("John Doe")
+# EXTERMINATUS
+address_book.delete_contact("Horus Lupercal")
 
+# Zobaczyć wszystko
 print(address_book)
 
+# Dodajemy nowego.
 new_record = Record("Bob Johnson", "5554441234")
 address_book.add_record(new_record)
 
+# Sprawdzam, czy dodał się.
 print(address_book)
 
