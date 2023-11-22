@@ -126,7 +126,7 @@ class Record:
 
     # Czytelne wyświetlanie.
     def __str__(self):
-        birthday_str = str(self.birthday[0]) if self.birthday else "None"
+        birthday_str = str(self.birthday) if self.birthday else "None"
         return (f'Name: {self.name}\n'
                 f'Phone: {", ".join(map(str, self.phone))}\n'
                 f'Birthday: {birthday_str}\n'
