@@ -194,6 +194,8 @@ class AddressBook(UserDict):
         return "\n".join(str(record) for record in self.data.values())
 
     def to_json(self, filename):
+        # Robimy strukture slownika z kluczem 'records'
+        # w którym każdej user to oddzielny słownik gdzie kluch to imie usera.
         data_to_write = {
             'records': {
                 name: {
@@ -204,18 +206,19 @@ class AddressBook(UserDict):
             }
         }
         with open(filename, 'w') as data_file:
-            json.dump(data_to_write, data_file, indent=2)
+            json.dump(data_to_write, data_file, indent=2) # Dalem indent zeby bylo czytelne w pliku.
 
     @classmethod
     def from_json(cls, filename):
-        with open(filename, 'r') as data_file:
+        with open(filename, 'r') as data_file: # Wgrywamy plik.
             data = json.load(data_file)
-            records_data = data.get('records', {})
+            records_data = data.get('records', {})  # Wyciągamy słowniki pod kluczem.
             records = {}
 
             for name, record_data in records_data.items():
-                phone_list = record_data.get('phone', [])
-                phone_string = extract_phone(phone_list)
+                phone_list = record_data.get('phone', [])   # Wyciągamy liste z numerami.
+                phone_string = extract_phone(phone_list)    # Naszymi kulami robimy string.
+                # Stwarzamy objekt i pakujemy do rekordów w AddressBook.
                 record = Record(
                     name,
                     phone_string,
