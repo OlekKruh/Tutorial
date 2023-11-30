@@ -140,6 +140,7 @@ class Record:
                 f'Days to next Birthday left: {self.days_to_birthday()}\n')
 
 
+# Kule dla wyciągania numerów z listy [...] w string.
 def extract_phone(phone_list):
     return ', '.join(str(Phone(number)) for number in phone_list)
 
