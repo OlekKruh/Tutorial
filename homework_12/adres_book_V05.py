@@ -42,8 +42,7 @@ class Phone(Field):
             else:
                 formatted_phone = self.value
             return formatted_phone
-        # else:
-        #     return "None"
+
 
 class BirthDay(Field):
     def validate(self, value):
@@ -140,26 +139,9 @@ class Record:
                 f'Birthday: {birthday_str}\n'
                 f'Days to next Birthday left: {self.days_to_birthday()}\n')
 
-    # Przetwarzamy info i pchamy do json.
-    def to_json(self, filename):
-        data_to_write = {
-            'name': str(self.name),
-            'phone': list(map(str, self.phone)),
-            'birthday': str(self.birthday) if self.birthday else None
-        }
-        with open(filename, 'w') as data_file:
-            json.dump(data_to_write, data_file)
 
-    # Odtwarzamy info i robimy objekt clasy.
-    @classmethod
-    def from_json(cls, filename):
-        with open(filename, 'r') as data_file:
-            data = json.load(data_file)
-            name = data.get('name')
-            phone = (lambda string_list: ', '.join(string_list))(data.get('phone', []))
-            birthday = data.get('birthday')
-            rec = cls(name, phone, birthday)
-            return rec
+def extract_phone(phone_list):
+    return ', '.join(str(Phone(number)) for number in phone_list)
 
 
 class AddressBook(UserDict):
@@ -210,15 +192,46 @@ class AddressBook(UserDict):
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
 
+    def to_json(self, filename):
+        data_to_write = {
+            'records': {
+                name: {
+                    'name': str(record.name),
+                    'phone': list(map(str, record.phone)),
+                    'birthday': str(record.birthday) if record.birthday else None
+                } for name, record in self.data.items()
+            }
+        }
+        with open(filename, 'w') as data_file:
+            json.dump(data_to_write, data_file, indent=2)
+
+    @classmethod
+    def from_json(cls, filename):
+        with open(filename, 'r') as data_file:
+            data = json.load(data_file)
+            records_data = data.get('records', {})
+            records = {}
+
+            for name, record_data in records_data.items():
+                phone_list = record_data.get('phone', [])
+                phone_string = extract_phone(phone_list)
+                record = Record(
+                    name,
+                    phone_string,
+                    record_data.get('birthday')
+                )
+                records[name] = record
+
+            return cls(records)
 
 
 # Tworzenie księgi.
 address_book = AddressBook()
 
 # Tworzenie rekordów.
-record1 = Record("Horus Lupercal", "1234567890","01.01.1990")
+record1 = Record("Horus Lupercal", "1234567890", "01.01.1990")
 record2 = Record("Jane Smith", "5551112233")
-record3 = Record("Alice Johnson", "1112223334",)
+record3 = Record("Alice Johnson", "1112223334")
 
 # Dodawanie rekordów do księgi.
 address_book.add_record(record1)
@@ -229,7 +242,7 @@ address_book.add_record(record3)
 address_book.display_next_page()
 address_book.display_next_page()
 address_book.display_next_page()
-address_book.display_next_page()  # Brak więcej stron.
+address_book.display_next_page()  # Nie ma dalej stron.
 
 # Usuwanie rekordu z księgi.
 address_book.delete_contact("Horus Lupercal")
@@ -245,19 +258,9 @@ address_book.add_record(new_record)
 # Sprawdzanie, czy nowy rekord został dodany.
 print(address_book)
 
-# JSON.
-record1.to_json("record1.json")
-loaded_record1 = Record.from_json("record1.json")
-print(loaded_record1)
+# Zapis do pliku JSON.
+address_book.to_json("address_book.json")
 
-record2.to_json("record2.json")
-loaded_record2 = Record.from_json("record2.json")
-print(loaded_record2)
-
-record3.to_json("record3.json")
-loaded_record3 = Record.from_json("record3.json")
-print(loaded_record3)
-
-new_record.to_json("record4.json")
-loaded_record4 = Record.from_json("record4.json")
-print(loaded_record4)
+# Odczyt z pliku JSON.
+loaded_address_book = AddressBook.from_json("address_book.json")
+print(loaded_address_book)
