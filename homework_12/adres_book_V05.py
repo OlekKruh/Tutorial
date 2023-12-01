@@ -191,7 +191,7 @@ class AddressBook(UserDict):
             print(f"Contact {name} not found in the address book.\n")
 
     def __str__(self, records=None):
-        records_to_display = records or self.data.values()
+        records_to_display = records
         return "\n".join(str(record) for record in records_to_display)
 
     def to_json(self, filename):
@@ -230,51 +230,19 @@ class AddressBook(UserDict):
         matching_record = []
 
         for record in self.data.values():
-            if re.search(pattern, record.name.value, re.IGNORECASE):
+            if (
+                re.search(pattern, record.name.value, re.IGNORECASE) or
+                any(re.search(pattern, str(phone), re.IGNORECASE) for phone in record.phone) or
+                (record.birthday and re.search(pattern, record.birthday.value, re.IGNORECASE))
+            ):
                 matching_record.append(record)
 
         return self.__str__(matching_record)
 
 
-# # Tworzenie księgi.
-# address_book = AddressBook()
-#
-# # Tworzenie rekordów.
-# record1 = Record("Horus Lupercal", "1234567890", "01.01.1990")
-# record2 = Record("Jane Smith", "5551112233")
-# record3 = Record("Alice Johnson", "1112223334")
-#
-# # Dodawanie rekordów do księgi.
-# address_book.add_record(record1)
-# address_book.add_record(record2)
-# address_book.add_record(record3)
-#
-# # Wyświetlanie rekordów.
-# address_book.display_next_page()
-# address_book.display_next_page()
-# address_book.display_next_page()
-# address_book.display_next_page()  # Nie ma dalej stron.
-#
-# # Usuwanie rekordu z księgi.
-# address_book.delete_contact("Horus Lupercal")
-#
-# # Wyświetlanie wszystkich rekordów po usunięciu.
-# print(address_book)
-#
-# # Dodawanie nowego rekordu z dwoma numerami telefonu.
-# new_record = Record("Bob Johnson", '5554441234')
-# new_record.add_phone('78945461230')
-# address_book.add_record(new_record)
-#
-# # Sprawdzanie, czy nowy rekord został dodany.
-# print(address_book)
-#
-# # # Zapis do pliku JSON.
-# # address_book.to_json("address_book.json")
-
 # Odczyt z pliku JSON.
-loaded_address_book = AddressBook.from_json("address_book.json")
-# print(loaded_address_book)
+address_book = AddressBook.from_json("address_book.json")
 
-matching_records = loaded_address_book.search('o')
+# Wyszukaj i wyświetl rekordy pasujące do wzorca 'al'.
+matching_records = address_book.search('A')
 print(matching_records)
