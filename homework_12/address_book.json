@@ -1,26 +1,24 @@
 {
-  "records": {
-    "Jane Smith": {
-      "name": "Jane Smith",
-      "phone": [
-        "+48 555-111-2233"
-      ],
-      "birthday": null
-    },
-    "Alice Johnson": {
-      "name": "Alice Johnson",
-      "phone": [
-        "+48 111-222-3334"
-      ],
-      "birthday": null
-    },
-    "Bob Johnson": {
-      "name": "Bob Johnson",
-      "phone": [
-        "+48 555-444-1234",
-        "+48 789-454-61230"
-      ],
-      "birthday": null
-    }
+  "Jane Smith": {
+    "name": "Jane Smith",
+    "phone": [
+      "+48 555-111-2233"
+    ],
+    "birthday": null
+  },
+  "Alice Johnson": {
+    "name": "Alice Johnson",
+    "phone": [
+      "+48 111-222-3334"
+    ],
+    "birthday": "30.05.1955"
+  },
+  "Bob Johnson": {
+    "name": "Bob Johnson",
+    "phone": [
+      "+48 555-444-1234",
+      "+48 789-454-61230"
+    ],
+    "birthday": null
   }
 }

@@ -190,34 +190,32 @@ class AddressBook(UserDict):
         else:
             print(f"Contact {name} not found in the address book.\n")
 
-    def __str__(self):
-        return "\n".join(str(record) for record in self.data.values())
+    def __str__(self, records=None):
+        records_to_display = records or self.data.values()
+        return "\n".join(str(record) for record in records_to_display)
 
     def to_json(self, filename):
         # Robimy strukture slownika z kluczem 'records'
         # w którym każdej user to oddzielny słownik gdzie kluch to imie usera.
         data_to_write = {
-            'records': {
-                name: {
-                    'name': str(record.name),
-                    'phone': list(map(str, record.phone)),
-                    'birthday': str(record.birthday) if record.birthday else None
-                } for name, record in self.data.items()
-            }
+            name: {
+                'name': str(record.name),
+                'phone': list(map(str, record.phone)),
+                'birthday': str(record.birthday) if record.birthday else None
+            } for name, record in self.data.items()
         }
         with open(filename, 'w') as data_file:
-            json.dump(data_to_write, data_file, indent=2) # Dalem indent zeby bylo czytelne w pliku.
+            json.dump(data_to_write, data_file, indent=2)  # Dalem indent zeby bylo czytelne w pliku.
 
     @classmethod
     def from_json(cls, filename):
-        with open(filename, 'r') as data_file: # Wgrywamy plik.
-            data = json.load(data_file)
-            records_data = data.get('records', {})  # Wyciągamy słowniki pod kluczem.
+        with open(filename, 'r') as data_file:  # Wgrywamy plik.
+            data = json.load(data_file)  # Wyciągamy słowniki.
             records = {}
 
-            for name, record_data in records_data.items():
-                phone_list = record_data.get('phone', [])   # Wyciągamy liste z numerami.
-                phone_string = extract_phone(phone_list)    # Naszymi kulami robimy string.
+            for name, record_data in data.items():
+                phone_list = record_data.get('phone', [])  # Wyciągamy liste z numerami.
+                phone_string = extract_phone(phone_list)  # Naszymi kulami robimy string.
                 # Stwarzamy objekt i pakujemy do rekordów w AddressBook.
                 record = Record(
                     name,
@@ -225,46 +223,58 @@ class AddressBook(UserDict):
                     record_data.get('birthday')
                 )
                 records[name] = record
+        return cls(records)
 
-            return cls(records)
+    # Wyszukiwarka.
+    def search(self, pattern):
+        matching_record = []
+
+        for record in self.data.values():
+            if re.search(pattern, record.name.value, re.IGNORECASE):
+                matching_record.append(record)
+
+        return self.__str__(matching_record)
 
 
-# Tworzenie księgi.
-address_book = AddressBook()
-
-# Tworzenie rekordów.
-record1 = Record("Horus Lupercal", "1234567890", "01.01.1990")
-record2 = Record("Jane Smith", "5551112233")
-record3 = Record("Alice Johnson", "1112223334")
-
-# Dodawanie rekordów do księgi.
-address_book.add_record(record1)
-address_book.add_record(record2)
-address_book.add_record(record3)
-
-# Wyświetlanie rekordów.
-address_book.display_next_page()
-address_book.display_next_page()
-address_book.display_next_page()
-address_book.display_next_page()  # Nie ma dalej stron.
-
-# Usuwanie rekordu z księgi.
-address_book.delete_contact("Horus Lupercal")
-
-# Wyświetlanie wszystkich rekordów po usunięciu.
-print(address_book)
-
-# Dodawanie nowego rekordu z dwoma numerami telefonu.
-new_record = Record("Bob Johnson", '5554441234')
-new_record.add_phone('78945461230')
-address_book.add_record(new_record)
-
-# Sprawdzanie, czy nowy rekord został dodany.
-print(address_book)
-
-# Zapis do pliku JSON.
-address_book.to_json("address_book.json")
+# # Tworzenie księgi.
+# address_book = AddressBook()
+#
+# # Tworzenie rekordów.
+# record1 = Record("Horus Lupercal", "1234567890", "01.01.1990")
+# record2 = Record("Jane Smith", "5551112233")
+# record3 = Record("Alice Johnson", "1112223334")
+#
+# # Dodawanie rekordów do księgi.
+# address_book.add_record(record1)
+# address_book.add_record(record2)
+# address_book.add_record(record3)
+#
+# # Wyświetlanie rekordów.
+# address_book.display_next_page()
+# address_book.display_next_page()
+# address_book.display_next_page()
+# address_book.display_next_page()  # Nie ma dalej stron.
+#
+# # Usuwanie rekordu z księgi.
+# address_book.delete_contact("Horus Lupercal")
+#
+# # Wyświetlanie wszystkich rekordów po usunięciu.
+# print(address_book)
+#
+# # Dodawanie nowego rekordu z dwoma numerami telefonu.
+# new_record = Record("Bob Johnson", '5554441234')
+# new_record.add_phone('78945461230')
+# address_book.add_record(new_record)
+#
+# # Sprawdzanie, czy nowy rekord został dodany.
+# print(address_book)
+#
+# # # Zapis do pliku JSON.
+# # address_book.to_json("address_book.json")
 
 # Odczyt z pliku JSON.
 loaded_address_book = AddressBook.from_json("address_book.json")
-print(loaded_address_book)
+# print(loaded_address_book)
+
+matching_records = loaded_address_book.search('o')
+print(matching_records)
