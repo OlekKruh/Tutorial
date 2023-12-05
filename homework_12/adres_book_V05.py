@@ -191,8 +191,11 @@ class AddressBook(UserDict):
             print(f"Contact {name} not found in the address book.\n")
 
     def __str__(self, records=None):
-        records_to_display = records
-        return "\n".join(str(record) for record in records_to_display)
+        records_to_display = records or self.data.values()
+        if records_to_display is not None:
+            return "\n".join(str(record) for record in records_to_display)
+        else:
+            return "No records to display."
 
     def to_json(self, filename):
         # Robimy strukture slownika z kluczem 'records'
@@ -231,9 +234,9 @@ class AddressBook(UserDict):
 
         for record in self.data.values():
             if (
-                re.search(pattern, record.name.value, re.IGNORECASE) or
-                any(re.search(pattern, str(phone), re.IGNORECASE) for phone in record.phone) or
-                (record.birthday and re.search(pattern, record.birthday.value, re.IGNORECASE))
+                    re.search(pattern, record.name.value, re.IGNORECASE) or
+                    any(re.search(pattern, str(phone), re.IGNORECASE) for phone in record.phone) or
+                    (record.birthday and re.search(pattern, record.birthday.value, re.IGNORECASE))
             ):
                 matching_record.append(record)
 
@@ -242,6 +245,7 @@ class AddressBook(UserDict):
 
 # Odczyt z pliku JSON.
 address_book = AddressBook.from_json("address_book.json")
+print(address_book)
 
 # Wyszukaj i wyświetl rekordy pasujące do wzorca 'al'.
 matching_records = address_book.search('A')
