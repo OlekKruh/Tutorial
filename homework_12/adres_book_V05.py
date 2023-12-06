@@ -47,8 +47,8 @@ class Phone(Field):
 class BirthDay(Field):
     def validate(self, value):
         return bool(re.match(r'^(0[1-9]|[12][0-9]|3[01])\.'  # dzień
-                             r'(0[1-9]|1[0-2])\.'  # miesiąц 
-                             r'(19[4-9][0-9]|200[0-9]|201[0-9]|202[0-4])$',  # рік
+                             r'(0[1-9]|1[0-2])\.'  # miesiąc 
+                             r'(19[4-9][0-9]|200[0-9]|201[0-9]|202[0-4])$',  # rok
                              value))
 
 
