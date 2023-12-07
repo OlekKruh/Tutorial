@@ -242,11 +242,4 @@ class AddressBook(UserDict):
 
         return self.__str__(matching_record)
 
-
-# Odczyt z pliku JSON.
-address_book = AddressBook.from_json("address_book.json")
-print(address_book)
-
-# Wyszukaj i wyświetl rekordy pasujące do wzorca 'al'.
-matching_records = address_book.search('A')
-print(matching_records)
+if __name__ == '__main__':
