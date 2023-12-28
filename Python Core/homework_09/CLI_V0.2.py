@@ -8,12 +8,12 @@ def input_error(func):
             return func(*args, **kwargs)
         except (KeyError, ValueError, IndexError, TypeError) as e:
             return f'An error occurred: {e}'
+
     return wrapper
 
 
 def exit_program_f(*args):
     return sys.exit(f'Exiting the program.\nHave a nice day.')
-
 
 
 def show_all_f(contact_list):
@@ -67,10 +67,12 @@ def help_f(*args):
            f'-show all => Shows all contacts numbers\n' \
            f'-good bye, close, exit, quit => Exiting the program'
 
+
 def hello_f(*args):
     return f'Hello. How can I help you?'
 
-COMMAND_LIST = {
+
+COMMAND_LIST_NOTEBOOK = {
     'help': help_f,
     'hello': hello_f,
     'add': add_f,

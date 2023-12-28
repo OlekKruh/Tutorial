@@ -241,5 +241,3 @@ class AddressBook(UserDict):
                 matching_record.append(record)
 
         return self.__str__(matching_record)
-
-if __name__ == '__main__':
