@@ -60,3 +60,6 @@ class MenuUI(UI, UserInput):
                 break
             else:
                 print(f'Unknown command. Try again.\n')
+
+    def echo(self, input_str):
+        print(input_str)
